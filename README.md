@@ -1,2 +1,2 @@
-# LearningAjax
-Project for teaching ajax
+# Learning RESTful APIs
+Project for teaching RESTful APIs
