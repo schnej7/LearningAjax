@@ -26,6 +26,7 @@
     <script type="text/javascript">
       // Base url for making API calls
       var baseUrl = "http://api.tripadvisor.com/api/partner/2.0/";
+      var initialPath = "location/187791/restaurants";
 
       // function to update the text in the url input
       var updateUrl = function() {
@@ -37,11 +38,12 @@
       };
 
       $( document ).ready( function() {
-        // Update the url on page load
-        updateUrl.call();
-
         // Any time the input changes update the url
         $('#PATH,#KEY').bind("propertychange change click keyup input paste", updateUrl);
+        $('#PATH').val(initialPath);
+
+        // Update the url on page load
+        updateUrl.call();
       });
 
     </script>
