@@ -11,6 +11,7 @@
         color: #fff;
         text-shadow: 0 0 1px #4B7E37;
       }
+      .helpers,
       .control {
         text-align: center;
         padding: 20px;
@@ -21,12 +22,25 @@
         width: 70%;
         float: right;
       }
+      .helpers h3 {
+        color: #4B7E37;
+      }
+      .clickable {
+        cursor: pointer;
+      }
+      .clickable:hover {
+        text-decoration: underline;
+        color: #589442;
+      }
     </style>
 
     <script type="text/javascript">
       // Base url for making API calls
       var baseUrl = "http://api.tripadvisor.com/api/partner/2.0/";
-      var initialPath = "location/187791/restaurants";
+      var initialPath = "location/187791";
+      var exampleGeo = 48739;
+      var exampleDetail = 5777687;
+      var exampleLatLon = '42.729164,-73.678503';
 
       // function to update the text in the url input
       var updateUrl = function() {
@@ -37,10 +51,44 @@
         $('#URL_LINK').attr('href', url);           // paste that value into the href around the input box
       };
 
+      // When the page is ready run this block
       $( document ).ready( function() {
         // Any time the input changes update the url
         $('#PATH,#KEY').bind("propertychange change click keyup input paste", updateUrl);
         $('#PATH').val(initialPath);
+
+        // Update the path & url when a clickable is clicked
+        $('.endpoint .clickable').click( function(evt) {
+          var endpoint = $(evt.target).parent('.endpoint').attr('data-endpoint');   // Get the endpoint
+          var qualifier = $(evt.target).attr('data-qualifier');                     // Get the qualifier
+          var poiType = $(evt.target).attr('data-poitype');                         // Get the poiType
+          var locId = null;
+
+          // Choose a locid based on the POI type
+          switch (poiType) {
+            case 'geo':
+              locId = exampleGeo;
+              break;
+            case 'detail':
+              locId = exampleDetail;
+              break;
+            case 'latlon':
+              locId = exampleLatLon;
+              break;
+            case 'geo-query':
+              qualifier = "?geo_id=" + exampleGeo;
+              break;
+          }
+
+          // Update the path
+          var path = locId == null ? 
+            endpoint + '/' + qualifier :
+            endpoint + '/' + locId + '/' + qualifier;
+          $('#PATH').val(path);
+
+          // Update the URL
+          updateUrl.call();
+        });
 
         // Update the url on page load
         updateUrl.call();
@@ -59,6 +107,25 @@
       <div class="line"><h3>Path: <input id="PATH" type="text" name="path"></h3></div>
       <div class="line"><h3>Key: <input id="KEY" type="text" name="key"></h3></div>
       <div class="line "><h3>Url: <a id="URL_LINK" href="#" target="_blank"><div id="URL"></div></a></h3></div>
+    </div>
+
+    <div class="helpers">
+      <ul class="endpoint list-group" data-endpoint="map">
+        <h3>Map (latitude,longitude)</h3>
+        <li class="clickable list-group-item" data-poitype="latlon" data-qualifier="restaurants">Restaurants</li>
+        <li class="clickable list-group-item" data-poitype="latlon" data-qualifier="attractions">Attractions</li>
+        <li class="clickable list-group-item" data-poitype="latlon" data-qualifier="hotels">Hotels</li>
+        <li class="clickable list-group-item" data-poitype="latlon" data-qualifier="geos">Geos</li>
+      </ul>
+      <ul class="endpoint list-group" data-endpoint="location">
+        <h3>Location</h3>
+        <li class="clickable list-group-item" data-poitype="geo" data-qualifier="">Location</li>
+        <li class="clickable list-group-item" data-poitype="geo" data-qualifier="restaurants">Restaurants</li>
+        <li class="clickable list-group-item" data-poitype="geo" data-qualifier="attractions">Attractions</li>
+        <li class="clickable list-group-item" data-poitype="geo" data-qualifier="hotels">Hotels</li>
+        <li class="clickable list-group-item" data-poitype="detail" data-qualifier="awards">Awards</li>
+        <li class="clickable list-group-item" data-poitype="detail" data-qualifier="reviews">Reviews</li>
+      </ul>
     </div>
     
   </body>
