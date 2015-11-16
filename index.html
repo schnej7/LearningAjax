@@ -80,9 +80,8 @@
 
       // When the page is ready run this block
       $( document ).ready( function() {
-        // Any time the input changes update the url
-        $('#PATH,#KEY').bind("propertychange change click keyup input paste", updateUrl);
-        $('#PATH').val(initialPath);
+        $('#PATH,#KEY').bind("propertychange change click keyup input paste", updateUrl);   // Any time the input changes update the url
+        $('#PATH').val(initialPath);                                                        // Update the default path
 
         // Update the path & url when a clickable is clicked
         $('.endpoint .clickable').click( function(evt) {
@@ -104,18 +103,15 @@
               break;
           }
 
-          // Update the path
-          var path = locId == null ? 
-            endpoint + '/' + qualifier :
-            endpoint + '/' + locId + '/' + qualifier;
-          $('#PATH').val(path);
+          var path = locId == null ?                    // Update the path
+            endpoint + '/' + qualifier :                // No location id
+            endpoint + '/' + locId + '/' + qualifier;   // Location id
+          $('#PATH').val(path);                         // Set the path in the DOM
 
-          // Update the URL
-          updateUrl.call();
+          updateUrl.call(); // Update URL
         });
 
-        // Update the url on page load
-        updateUrl.call();
+        updateUrl.call(); // Update the url on page load
       });
 
     </script>
