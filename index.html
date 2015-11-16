@@ -13,16 +13,18 @@
         text-shadow: 0 0 1px #4B7E37;
       }
       .head a {
-        color: #589442;
-        font-weight: bold;
-        background-color: #fff;
-        padding: 8px;
-        border-radius: 26px;
-        text-shadow: none;
-      }
-      .head a:hover {
         background-color: #589442;
         color: #fff;
+        text-decoration: underline;
+        padding: 8px;
+        border-radius: 26px;
+        font-weight: bold;
+      }
+      .head a:hover {
+        color: #589442;
+        background-color: #fff;
+        text-shadow: none;
+        text-decoration: none;
       }
       .helpers,
       .control {
@@ -30,8 +32,7 @@
         padding: 20px;
         margin: 0 10%;
       }
-      .control input,
-      .control #URL {
+      .control input {
         width: 70%;
         float: right;
       }
@@ -44,6 +45,11 @@
       .clickable:hover {
         text-decoration: underline;
         color: #589442;
+      }
+      .response {
+        margin: 0 10%;
+        max-height: 300px;
+        overflow-y: auto;
       }
     </style>
 
@@ -62,6 +68,14 @@
         url += "key=" + $('#KEY').val();            // get the key from the input box and add it to the url
         $('#URL').html(url);                        // paste that value into the url element
         $('#URL_LINK').attr('href', url);           // paste that value into the href around the input box
+        $('.response').text("Loading...");
+
+        $.get(url, function(data) {                           // Make the request
+          $('.response').text(JSON.stringify(data,null,2));   // When the response comes in add it to the DOM
+        },"json")                                             // Expect JSON in the response
+        .fail(function(data){                                 // If there is a problem call this function
+          $('.response').text("Error!");                      // Add error text
+        });
       };
 
       // When the page is ready run this block
@@ -118,9 +132,12 @@
 
     <div class="control">
       <div class="line"><h3>Path: <input id="PATH" type="text" name="path"></h3></div>
-      <div class="line"><h3>Key: <input id="KEY" type="text" name="key"></h3></div>
-      <div class="line "><h3>Url: <a id="URL_LINK" href="#" target="_blank"><div id="URL"></div></a></h3></div>
+      <div class="line"><h3>Key: <input id="KEY" type="text" name="key" value="4518e505-92d6-4490-957a-3b2da9a9024c"></h3></div>
+      <div class="line"><h3><a id="URL_LINK" href="#" target="_blank"><div id="URL"></div></a></h3></div>
     </div>
+
+    <pre class="response">
+    </pre>
 
     <div class="helpers">
       <ul class="endpoint list-group" data-endpoint="map">
